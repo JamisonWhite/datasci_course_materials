@@ -4,9 +4,8 @@ frequency.py -- Calculates term frequency
 __author__ = 'Jamison White'
 
 import json
-import csv
 import sys
-
+from collections import defaultdict
 
 def read_tweet_text(tweet_filename):
     """
@@ -20,20 +19,19 @@ def read_tweet_text(tweet_filename):
                 yield text.encode('utf-8')
 
 
-def frequency(tweet_filename):
-    terms = {}
-    for tweet in read_tweet_text(tweet_filename):
+def term_frequency_boolean(tweets):
+    tf = defaultdict(int)
+    for tweet in tweets:
         for word in tweet.split():
-            if word in terms:
-                terms[word] += 1
-            else:
-                terms[word] = 1
+            tf[word] += 1
+    return tf
 
-    total_terms = float(len(terms))
-    tf = {k: float(v) / total_terms for k, v in terms.iteritems()}
 
-    for k, v in tf.iteritems():
-        print "{0} {1:.4f}".format(k, v)
+def term_frequency_percentage(tweets):
+    tfb = term_frequency_boolean(tweets)
+    total_terms = sum(tfb.values())
+    tf = {k: float(v) / total_terms for k, v in tfb.iteritems()}
+    return tf
 
 
 def main():
@@ -42,7 +40,14 @@ def main():
         tweet_filename = sys.argv[1]
     else:
         tweet_filename = '../../data/output.txt'
-    frequency(tweet_filename)
+
+    #calculate term frequency
+    terms = term_frequency_percentage(read_tweet_text(tweet_filename))
+
+    #print results sorted
+    for k in sorted(terms, key=terms.get, reverse=True):
+        print "{0} {1:.10f}".format(k, terms[k])
+
 
 if __name__ == '__main__':
     main()

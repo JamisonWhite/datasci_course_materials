@@ -6,16 +6,17 @@ __author__ = 'Jamison White'
 import json
 import csv
 import sys
+from collections import defaultdict
 
 def load_sentiments(sent_filename):
     """
     load_sentiments -- loads TSV file of term and score file.
     """
-    sentiments = {}
+    sentiments = defaultdict(float)
     with open(sent_filename, 'r') as sent_file:
         reader = csv.reader(sent_file , dialect='excel-tab')
         for line in reader:
-            sentiments[line[0]] =  float(line[1])
+            sentiments[line[0]] = float(line[1])
     return sentiments
 
 def calc_sentiment(text, sentiments):
@@ -62,12 +63,12 @@ def main():
     if len(sys.argv) >= 2:
         sent_filename = sys.argv[1]
     else:
-        sent_filename = '../../data/oAFINN-111.txt'
+        sent_filename = '../../data/AFINN-111.txt'
 
     if len(sys.argv) >= 3:
         tweet_filename = sys.argv[2]
     else:
-        tweet_filename = '../../data/ooutput.txt'
+        tweet_filename = '../../data/output.txt'
 
     #term_sentiment(sent_filename, tweet_filename)
     term_sentiment(sent_filename, tweet_filename)
