@@ -3,75 +3,47 @@ term_sentiment.py -- Assigns a sentiment score to unscored terms based on tweet 
 """
 __author__ = 'Jamison White'
 
-import json
-import csv
-import sys
+from assignment1_lib import *
 from collections import defaultdict
 
-def load_sentiments(sent_filename):
-    """
-    load_sentiments -- loads TSV file of term and score file.
-    """
-    sentiments = defaultdict(float)
-    with open(sent_filename, 'r') as sent_file:
-        reader = csv.reader(sent_file , dialect='excel-tab')
-        for line in reader:
-            sentiments[line[0]] = float(line[1])
-    return sentiments
 
-def calc_sentiment(text, sentiments):
-    return sum([sentiments[word] for word in text.split(' ') if word in sentiments])
-
-def read_tweet_text(tweet_filename):
-    """
-    read_tweet_text -- generator reads tweet json from file with one tweet per line
-    """
-    with open(tweet_filename, 'r') as tweet_file:
-        for line in tweet_file:
-            tweet_json = json.loads(line)
-            if 'text' in tweet_json:
-                text = tweet_json['text']
-                yield text.encode('utf-8')
-
-
-def term_sentiment(sent_filename, tweet_filename):
-    """
-    term_sentiment -- assigns sentiment score to tweet by summing sentiments
-    """
-    sentiments = load_sentiments(sent_filename)
-
-    new_terms = {}
-
-    for tweet in read_tweet_text(tweet_filename):
+def assign_new_term_sentiment(tweets, sentiments, normalize=normalize_word):
+    new_terms = defaultdict(list)
+    for tweet in tweets:
         tweet_score = calc_sentiment(tweet, sentiments)
-
-        tweet_new_terms = [word for word in tweet.split() if word not in sentiments]
-
-        for word in tweet_new_terms:
-            if word in new_terms:
-                new_terms[word].append(tweet_score)
-            else:
-                new_terms[word] = [tweet_score]
-
-    terms = {k: sum(v) / len(v) for k, v in new_terms.iteritems()}
-    for k, v in terms.iteritems():
-        print "{0} {1:.4f}".format(k, v)
+        new_words = [word for word in [normalize(word) for word in tweet.split()] if word not in sentiments]
+        for word in new_words:
+            new_terms[word].append(tweet_score)
+    for k, v in new_terms.iteritems():
+        new_terms[k] = float(sum(v)) / float(len(v))
+    return new_terms
 
 
 def main():
-    #get the args
-    if len(sys.argv) >= 2:
-        sent_filename = sys.argv[1]
-    else:
-        sent_filename = '../../data/AFINN-111.txt'
 
-    if len(sys.argv) >= 3:
-        tweet_filename = sys.argv[2]
-    else:
-        tweet_filename = '../../data/output.txt'
+    #tweets_file, sentiments_file = get_file_names()
+    tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt', sentiments='AFINN-111.txt')
 
-    #term_sentiment(sent_filename, tweet_filename)
-    term_sentiment(sent_filename, tweet_filename)
+    sentiments = load_dict_from_file(sentiments_file)
+
+    tweets = read_tweet_text(tweets_file)
+
+    new_terms = assign_new_term_sentiment(tweets, sentiments)
+
+    #all
+    for k in sorted(new_terms, key=new_terms.get, reverse=True):
+        print "{0} {1:.4f}".format(k, new_terms[k])
+
+    # #top
+    # print "---------- TOP -------------"
+    # for k in sorted(terms, key=terms.get, reverse=True)[:10]:
+    #     print "{0} {1:.4f}".format(k, terms[k])
+    #
+    # #bottom
+    # print "---------- BOTTOM -------------"
+    # for k in sorted(terms, key=terms.get, reverse=True)[-10:]:
+    #     print "{0} {1:.4f}".format(k, terms[k])
+
 
 if __name__ == '__main__':
     main()
