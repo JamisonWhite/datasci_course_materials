@@ -62,12 +62,12 @@ def main():
     if len(sys.argv) >= 2:
         sent_filename = sys.argv[1]
     else:
-        sent_filename = 'AFINN-111.txt'
+        sent_filename = '../../data/oAFINN-111.txt'
 
     if len(sys.argv) >= 3:
         tweet_filename = sys.argv[2]
     else:
-        tweet_filename = 'output.txt'
+        tweet_filename = '../../data/ooutput.txt'
 
     #term_sentiment(sent_filename, tweet_filename)
     term_sentiment(sent_filename, tweet_filename)

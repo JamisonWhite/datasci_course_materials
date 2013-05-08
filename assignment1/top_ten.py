@@ -55,7 +55,7 @@ def main():
     if len(sys.argv) >= 2:
         tweet_filename = sys.argv[1]
     else:
-        tweet_filename = 'output.txt'
+        tweet_filename = '../../data/ooutput.txt'
 
 
     print_hash_tags(tweet_filename)
