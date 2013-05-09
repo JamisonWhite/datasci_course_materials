@@ -22,19 +22,41 @@ def get_file_names(tweets='../../data/output.txt', sentiments='../../data/AFINN-
     return tweets, sentiments
 
 
-def normalize_word(word):
-    return word
-    # return word.lower()
-    #return re.sub('[^a-z0-9 -]', '', word.lower()) #from hjort
+
+def normalize_default(text):
+    try:
+        return text.encode('utf-8')
+    except UnicodeDecodeError:
+        return text
 
 
-def normalize_tweet(tweet):
-    return tweet.encode('utf-8')
+def normalize_lower(text):
+    return normalize_default(text).lower()
 
 
-def read_tweet_text(tweet_filename, normalize=normalize_tweet):
+def normalize_strip_syntax(text):
+    return re.sub('[^a-z0-9 -]', '', normalize_lower(text)) #from hjort
+
+def normalize_strip_links(text):
+    if re.search('[/:@]', text):
+        return ''
+    return re.sub('[^a-z0-9 -]', '', normalize_lower(text)) #from hjort
+
+
+
+def read_tweet_json(tweet_filename):
     """
-    read_tweets -- generator reads tweet json from file with one tweet per line
+    read_tweet_json -- generator returns tweet json from file with one tweet per line
+    """
+    with open(tweet_filename, 'r') as tweet_file:
+        for line in tweet_file:
+            tweet_json = json.loads(line)
+            yield tweet_json
+
+
+def read_tweet_text(tweet_filename, normalize=normalize_default):
+    """
+    read_tweet_text -- generator reads tweet text from file with one tweet per line
     """
     with open(tweet_filename, 'r') as tweet_file:
         for line in tweet_file:
@@ -44,7 +66,7 @@ def read_tweet_text(tweet_filename, normalize=normalize_tweet):
                 yield normalize(text)
 
 
-def load_dict_from_file(filename, sep='\t', normalize=normalize_word):
+def load_dict_from_file(filename, sep='\t', normalize=normalize_default):
     result = defaultdict(float)
     with open(filename, 'r') as f:
         for line in f:

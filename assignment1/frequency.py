@@ -6,7 +6,7 @@ __author__ = 'Jamison White'
 from collections import defaultdict
 from assignment1_lib import *
 
-def term_frequency_count(tweets, normalize=normalize_word):
+def term_frequency_count(tweets, normalize=normalize_default):
     tf = defaultdict(int)
     for tweet in tweets:
         for word in tweet.split():
@@ -14,7 +14,7 @@ def term_frequency_count(tweets, normalize=normalize_word):
     return tf
 
 
-def term_frequency_percentage(tweets, normalize=normalize_word):
+def term_frequency_percentage(tweets, normalize=normalize_default):
     tfb = term_frequency_count(tweets, normalize)
     total_terms = sum(tfb.values())
     tf = {k: float(v) / total_terms for k, v in tfb.iteritems()}

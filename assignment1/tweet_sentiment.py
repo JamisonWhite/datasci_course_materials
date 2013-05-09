@@ -8,8 +8,8 @@ from assignment1_lib import *
 
 def main():
 
-    #tweets_file, sentiments_file = get_file_names()
-    tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt', sentiments='AFINN-111.txt')
+    tweets_file, sentiments_file = get_file_names()
+    #tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt', sentiments='AFINN-111.txt')
 
     sentiments = load_dict_from_file(sentiments_file)
 
