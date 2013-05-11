@@ -7,14 +7,14 @@ from assignment1_lib import *
 from collections import defaultdict
 
 
-def assign_new_term_sentiment(tweets, sentiments, normalize=normalize_default):
+def assign_new_term_sentiment(tweets, sentiments, min_support=1, normalize=normalize_default):
     terms = defaultdict(list)
     for tweet in tweets:
         tweet_score = calc_sentiment(tweet, sentiments)
         new_words = [word for word in [normalize(word) for word in tweet.split()] if word not in sentiments]
         for word in new_words:
             terms[word].append(tweet_score)
-    terms = {k: float(sum(v)) / float(len(v)) for k, v in terms.iteritems()}
+    terms = {k: float(sum(v)) / float(len(v)) for k, v in terms.iteritems() if len(v) >= min_support}
     return terms
 
 
@@ -25,9 +25,9 @@ def main():
 
     sentiments = load_dict_from_file(sentiments_file)
 
-    tweets = read_tweet_text(tweets_file)
+    tweets = read_tweet_file(tweets_file, read_tweet_text, normalize_strip_links)
 
-    terms = assign_new_term_sentiment(tweets, sentiments) #, normalize_strip_links)
+    terms = assign_new_term_sentiment(tweets, sentiments, 50, normalize_default) #, normalize_strip_links)
 
     # #all
     # for k in sorted(terms, key=terms.get, reverse=True):

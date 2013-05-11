@@ -6,29 +6,15 @@ __author__ = 'Jamison White'
 from assignment1_lib import *
 
 
-def read_tweet_text_state(tweet, normalize=normalize_default):
-    text = ''
-    state = ''
-
-    if 'text' in tweet:
-        text = tweet['text']
-
-    if 'place' in tweet:
-        if tweet['place'] != None:
-            if tweet['place']['country_code'] == 'US':
-                state = tweet['place']['full_name'][-2:]
-
-    return normalize(text), normalize(state)
-
 
 def state_sentiments(tweets, sentiments, normalize=normalize_default):
     states = defaultdict(list)
     for tweet in tweets:
-        text, state = read_tweet_text_state(tweet, normalize)
-        states[state].append(calc_sentiment(text, sentiments))
-
-    states = {k: sum(v) / len(v) for k, v in states.iteritems()}
-    return states
+        text = read_tweet_text(tweet, normalize)
+        state = read_tweet_state(tweet, normalize).upper()
+        if state != '':
+            states[state].append(calc_sentiment(text, sentiments, normalize))
+    return {k: sum(v) / len(v) for k, v in states.iteritems()}
 
 
 def main():
@@ -37,9 +23,9 @@ def main():
 
     sentiments = load_dict_from_file(sentiments_file)
 
-    states = state_sentiments(read_tweet_json(tweets_file), sentiments)
+    states = state_sentiments(read_tweet_file(tweets_file), sentiments, normalize_default)
 
-    for k in sorted(states, key=states.get, reverse=True)[:100]:
+    for k in sorted(states, key=states.get, reverse=True):
         print k, states[k]
 
 

@@ -22,20 +22,23 @@ def get_file_names(tweets='../../data/output.txt', sentiments='../../data/AFINN-
     return tweets, sentiments
 
 
-
 def normalize_default(text):
     try:
         return text.encode('utf-8')
     except UnicodeDecodeError:
-        return text
+        return ''
 
 
 def normalize_lower(text):
     return normalize_default(text).lower()
 
 
+def normalize_upper(text):
+    return normalize_default(text).upper()
+
 def normalize_strip_syntax(text):
     return re.sub('[^a-z0-9 -]', '', normalize_lower(text)) #from hjort
+
 
 def normalize_strip_links(text):
     if re.search('[/:@]', text):
@@ -43,27 +46,31 @@ def normalize_strip_links(text):
     return re.sub('[^a-z0-9 -]', '', normalize_lower(text)) #from hjort
 
 
+def read_tweet_json(tweet, normalize=normalize_default):
+    return tweet
 
-def read_tweet_json(tweet_filename):
-    """
-    read_tweet_json -- generator returns tweet json from file with one tweet per line
-    """
+
+def read_tweet_text(tweet, normalize=normalize_default):
+    text = ''
+    if 'text' in tweet:
+        text = tweet['text']
+    return normalize(text)
+
+
+def read_tweet_state(tweet, normalize=normalize_default):
+    state = ''
+    if 'place' in tweet:
+        if tweet['place'] != None:
+            if tweet['place']['country_code'] == 'US':
+                state = tweet['place']['full_name'][-2:]
+    return normalize(state)
+
+
+def read_tweet_file(tweet_filename, tweet_reader=read_tweet_json, normalize=normalize_default):
     with open(tweet_filename, 'r') as tweet_file:
         for line in tweet_file:
             tweet_json = json.loads(line)
-            yield tweet_json
-
-
-def read_tweet_text(tweet_filename, normalize=normalize_default):
-    """
-    read_tweet_text -- generator reads tweet text from file with one tweet per line
-    """
-    with open(tweet_filename, 'r') as tweet_file:
-        for line in tweet_file:
-            tweet_json = json.loads(line)
-            if 'text' in tweet_json:
-                text = tweet_json['text']
-                yield normalize(text)
+            yield tweet_reader(tweet_json, normalize)
 
 
 def load_dict_from_file(filename, sep='\t', normalize=normalize_default):
@@ -75,6 +82,6 @@ def load_dict_from_file(filename, sep='\t', normalize=normalize_default):
     return result
 
 
-def calc_sentiment(text, sentiments):
-    return sum([sentiments[word] for word in text.split() if word in sentiments])
+def calc_sentiment(text, sentiments, normalize=normalize_default):
+    return sum([sentiments[word] for word in [normalize(word1) for word1 in text.split()] if word in sentiments])
 

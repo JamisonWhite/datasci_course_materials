@@ -22,10 +22,10 @@ def term_frequency_percentage(tweets, normalize=normalize_default):
 
 def main():
 
-    #tweets_file, sentiments_file = get_file_names()
-    tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt')
+    tweets_file, sentiments_file = get_file_names()
+    #tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt')
 
-    terms = term_frequency_percentage(read_tweet_text(tweets_file))
+    terms = term_frequency_percentage(read_tweet_file(tweets_file, read_tweet_text, normalize_default))
 
     for k in sorted(terms, key=terms.get, reverse=True):
         print "{0} {1:.10f}".format(k, terms[k])
