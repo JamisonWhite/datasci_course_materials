@@ -10,8 +10,8 @@ from assignment1_lib import *
 def state_sentiments(tweets, sentiments, normalize=normalize_default):
     states = defaultdict(list)
     for tweet in tweets:
-        text = read_tweet_text(tweet, normalize)
-        state = read_tweet_state(tweet, normalize).upper()
+        text = get_tweet_text(tweet, normalize)
+        state = get_tweet_state(tweet, normalize).upper()
         if state != '':
             states[state].append(calc_sentiment(text, sentiments, normalize))
     return {k: sum(v) / len(v) for k, v in states.iteritems()}

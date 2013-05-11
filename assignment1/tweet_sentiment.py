@@ -13,7 +13,7 @@ def main():
 
     sentiments = load_dict_from_file(sentiments_file)
 
-    for tweet in read_tweet_file(tweets_file, read_tweet_text, normalize_default):
+    for tweet in read_tweet_file(tweets_file, get_tweet_text, normalize_default):
         print calc_sentiment(tweet, sentiments)
 
 

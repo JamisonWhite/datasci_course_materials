@@ -25,9 +25,9 @@ def main():
     tweets_file, sentiments_file = get_file_names()
     #tweets_file, sentiments_file = get_file_names(tweets='C:\Data\TwitterStream\output.txt')
 
-    terms = term_frequency_percentage(read_tweet_file(tweets_file, read_tweet_text, normalize_default))
+    terms = term_frequency_percentage(read_tweet_file(tweets_file, get_tweet_text, normalize_default))
 
-    for k in sorted(terms, key=terms.get, reverse=True):
+    for k in sorted(terms, key=terms.get, reverse=True)[:100]:
         print "{0} {1:.10f}".format(k, terms[k])
 
     #print "{0} terms".format(len(terms))

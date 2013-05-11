@@ -25,7 +25,7 @@ def main():
 
     sentiments = load_dict_from_file(sentiments_file)
 
-    tweets = read_tweet_file(tweets_file, read_tweet_text, normalize_strip_links)
+    tweets = read_tweet_file(tweets_file, get_tweet_text, normalize_strip_links)
 
     terms = assign_new_term_sentiment(tweets, sentiments, 50, normalize_default) #, normalize_strip_links)
 

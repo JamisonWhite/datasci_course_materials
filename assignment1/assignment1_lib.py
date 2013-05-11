@@ -46,18 +46,18 @@ def normalize_strip_links(text):
     return re.sub('[^a-z0-9 -]', '', normalize_lower(text)) #from hjort
 
 
-def read_tweet_json(tweet, normalize=normalize_default):
+def get_tweet_json(tweet, normalize=normalize_default):
     return tweet
 
 
-def read_tweet_text(tweet, normalize=normalize_default):
+def get_tweet_text(tweet, normalize=normalize_default):
     text = ''
     if 'text' in tweet:
         text = tweet['text']
     return normalize(text)
 
 
-def read_tweet_state(tweet, normalize=normalize_default):
+def get_tweet_state(tweet, normalize=normalize_default):
     state = ''
     if 'place' in tweet:
         if tweet['place'] != None:
@@ -66,7 +66,7 @@ def read_tweet_state(tweet, normalize=normalize_default):
     return normalize(state)
 
 
-def read_tweet_file(tweet_filename, tweet_reader=read_tweet_json, normalize=normalize_default):
+def read_tweet_file(tweet_filename, tweet_reader=get_tweet_json, normalize=normalize_default):
     with open(tweet_filename, 'r') as tweet_file:
         for line in tweet_file:
             tweet_json = json.loads(line)

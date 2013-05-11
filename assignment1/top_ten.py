@@ -31,7 +31,7 @@ def main():
 
     tweets_file, sentiments_file = get_file_names()
 
-    hashtags = count_tweet_hashtags(read_tweet_file(tweets_file, read_tweet_json))
+    hashtags = count_tweet_hashtags(read_tweet_file(tweets_file, get_tweet_json))
 
     for k in sorted(hashtags, key=hashtags.get, reverse=True)[:100]:
         print k, hashtags[k]
