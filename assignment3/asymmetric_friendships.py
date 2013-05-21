@@ -5,6 +5,7 @@ __author__ = 'jamie'
 
 import sys
 import MapReduce
+from collections import defaultdict
 
 # Part 1
 mr = MapReduce.MapReduce()
@@ -13,34 +14,27 @@ mr = MapReduce.MapReduce()
 def mapper(record):
     # key: document identifier
     # value: document contents
-    key = record[1]
-    value = record
-    mr.emit_intermediate(key, value)
+    key = record[0]
+    value = record[1]
+    mr.emit_intermediate(key, (value, 1))
+    mr.emit_intermediate(value, (key, 0))
+    #mr.emit_intermediate(key, value)
 
 # Part 3
 def reducer(key, list_of_values):
     # key: word
     # value: list of columns
-    orders = []
-    items = []
+    #mr.emit((key, list_of_values))
+    d = defaultdict(list)
     for l in list_of_values:
-        if l[0] == 'order':
-            orders.append(l)
-        else:
-            items.append(l)
-
-    for o in orders:
-        for i in items:
-            x = o + i
-            mr.emit(x)
-
-
+        d[l[0]] = l[1]
+    mr.emit(d)
 # Part 4
 def main():
     if len(sys.argv) >= 2:
         data = open(sys.argv[1])
     else:
-        data = "data\\records.json"
+        data = "data\\friends.json"
 
     with open(data, 'r') as f:
         mr.execute(f, mapper, reducer)
