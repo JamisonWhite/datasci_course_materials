@@ -18,18 +18,18 @@ def mapper(record):
     value = record[3]
 
     if matrix == 'a':
-        mr.emit_intermediate('arow{0}'.format(x), ('a', x, value))
-        mr.emit_intermediate('acol{0}'.format(y), ('a', y, value))
+        mr.emit_intermediate('arow{0}'.format(x), ('a', x, y, value))
+        mr.emit_intermediate('acol{0}'.format(y), ('a', x, y, value))
 
-        mr.emit_intermediate('brow{0}'.format(y), ('a', x, value))
-        mr.emit_intermediate('bcol{0}'.format(x), ('a', y, value))
+        mr.emit_intermediate('brow{0}'.format(y), ('a', x, y, value))
+        mr.emit_intermediate('bcol{0}'.format(x), ('a', x, y, value))
 
     if matrix == 'b':
-        mr.emit_intermediate('arow{0}'.format(y), ('b', y, value))
-        mr.emit_intermediate('acol{0}'.format(x), ('b', x, value))
+        mr.emit_intermediate('arow{0}'.format(y), ('b', x, y, value))
+        mr.emit_intermediate('acol{0}'.format(x), ('b', x, y, value))
 
-        mr.emit_intermediate('brow{0}'.format(x), ('b', x, value))
-        mr.emit_intermediate('bcol{0}'.format(y), ('b', y, value))
+        mr.emit_intermediate('brow{0}'.format(x), ('b', x, y, value))
+        mr.emit_intermediate('bcol{0}'.format(y), ('b', x, y, value))
 
 
     # for i in range(x):
