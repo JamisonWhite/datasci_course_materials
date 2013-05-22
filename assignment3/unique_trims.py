@@ -11,24 +11,13 @@ mr = MapReduce.MapReduce()
 
 # Part 2
 def mapper(record):
-    personA = record[0]
-    personB = record[1]
-    mr.emit_intermediate(personA, personB)
-    mr.emit_intermediate(personB, personA)
+    mr.emit_intermediate("dna", record[1][:-10])
 
 
 # Part 3
 def reducer(key, list_of_values):
-    seen = set()
-    seen_twice = set()
-    for x in list_of_values:
-        if x in seen:
-            seen_twice.add(x)
-        else:
-            seen.add(x)
-
-    for x in (seen - seen_twice):
-        mr.emit((key, x))
+    for x in set(list_of_values):
+        mr.emit(x)
 
 
 # Part 4
@@ -36,7 +25,7 @@ def main():
     if len(sys.argv) >= 2:
         data = open(sys.argv[1])
     else:
-        data = "data/friends.json"
+        data = "data/dna.json"
 
     with open(data, 'r') as f:
         mr.execute(f, mapper, reducer)

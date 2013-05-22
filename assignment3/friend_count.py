@@ -33,7 +33,7 @@ def main():
     if len(sys.argv) >= 2:
         data = open(sys.argv[1])
     else:
-        data = "data\\friends.json"
+        data = "data/friends.json"
 
     with open(data, 'r') as f:
         mr.execute(f, mapper, reducer)
