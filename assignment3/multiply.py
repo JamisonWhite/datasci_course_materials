@@ -37,9 +37,6 @@ def mapper(record):
 
 
 # Part 3
-def reducer_writer(key, list_of_values):
-    mr.emit((key, list_of_values))
-
 def reducer(key, list_of_values):
     M = {}
     N = {}
@@ -57,38 +54,6 @@ def reducer(key, list_of_values):
     result.append(total)
     mr.emit(result)
 
-
-# Part 2
-def mapper_step1(record):
-
-    #Relation M(I, J, V) with tuples (m, i, j, m_ij)
-    #Relation N(J, K, W) with tuples (n, j, k, n_jk)
-
-    if record[0] == 'a':
-        mr.emit_intermediate(record[2], (record[0], record[1], record[3]))
-
-    if record[0] == 'b':
-        mr.emit_intermediate(record[1], (record[0], record[2], record[3]))
-
-
-
-def reducer_step1(key, list_of_values):
-    #mr.emit((key, list_of_values))
-
-    M = [v for v in list_of_values if v[0] == 'a']
-    N = [v for v in list_of_values if v[0] == 'b']
-
-    for m in M:
-        for n in N:
-            mr.emit([m[1], n[1], m[2] *  n[2]])
-
-
-def mapper_step2(record):
-    mr2.emit_intermediate([record[0], record[1]], record[2])
-
-
-def reducer_step2(key, list_of_values):
-    mr2.emit([key, sum(list_of_values)])
 
 
 # Part 4
