@@ -3,20 +3,15 @@ __author__ = 'jamie'
 
 import sys
 import MapReduce
-import json
 
 # Part 1
 mr = MapReduce.MapReduce()
-mr2 = MapReduce.MapReduce()
-
 
 # Part 2
 def mapper(record):
-
     #Relation M(I, J, V) with tuples (m, i, j, m_ij)
     #Relation N(J, K, W) with tuples (n, j, k, n_jk)
 
-    k = 4
 
     if record[0] == 'a':
         M = record[0]
@@ -25,7 +20,6 @@ def mapper(record):
         v = record[3]
         for k in range(5):
             mr.emit_intermediate((i, k), [M, j, v])
-
 
     if record[0] == 'b':
         N = record[0]
