@@ -11,30 +11,29 @@ mr = MapReduce.MapReduce()
 
 # Part 2
 def mapper(record):
-    # key: document identifier
-    # value: document contents
-    key = record[0]
-    value = record[1]
-    words = value.split()
+    # 0: document identifier
+    # 1: document contents
+    words = record[1].split()
     for w in words:
       mr.emit_intermediate(w, 1)
 
 # Part 3
-def reducer(key, list_of_values):
+def reducer(key, values):
     # key: word
-    # value: list of occurrence counts
-    total = 0
-    for v in list_of_values:
-      total += v
-    mr.emit((key, total))
+    # values: 1 for each occurrence of word
+    mr.emit((key, sum(values)))
 
 # Part 4
-if len(sys.argv) >= 2:
-    data = open(sys.argv[1])
-else:
-    data = "data/books.json"
+def main():
+    if len(sys.argv) >= 2:
+        data = open(sys.argv[1])
+    else:
+        data = "data/books.json"
 
-with open(data, 'r') as f:
-    mr.execute(f, mapper, reducer)
+    with open(data, 'r') as f:
+        mr.execute(f, mapper, reducer)
 
+
+if __name__ == '__main__':
+    main()
 

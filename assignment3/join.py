@@ -11,19 +11,17 @@ mr = MapReduce.MapReduce()
 
 # Part 2
 def mapper(record):
-    # key: document identifier
-    # value: document contents
-    key = record[1]
-    value = record
-    mr.emit_intermediate(key, value)
+    # 1: join key
+    # 0..n: attributes
+    mr.emit_intermediate(record[1], record)
 
 # Part 3
-def reducer(key, list_of_values):
-    # key: word
-    # value: list of columns
+def reducer(key, values):
+    # key: join key
+    # values: 0..n attributes
     orders = []
     items = []
-    for l in list_of_values:
+    for l in values:
         if l[0] == 'order':
             orders.append(l)
         else:
@@ -40,7 +38,7 @@ def main():
     if len(sys.argv) >= 2:
         data = open(sys.argv[1])
     else:
-        data = "data\\records.json"
+        data = "data/records.json"
 
     with open(data, 'r') as f:
         mr.execute(f, mapper, reducer)

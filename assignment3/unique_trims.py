@@ -3,7 +3,7 @@ __author__ = 'jamie'
 
 import sys
 import MapReduce
-from collections import defaultdict
+
 
 # Part 1
 mr = MapReduce.MapReduce()
@@ -11,13 +11,16 @@ mr = MapReduce.MapReduce()
 
 # Part 2
 def mapper(record):
+    # 1: key
+    # 2: DNA sequence
     mr.emit_intermediate("dna", record[1][:-10])
 
 
 # Part 3
-def reducer(key, list_of_values):
-    for x in set(list_of_values):
-        mr.emit(x)
+def reducer(key, values):
+    # key: "dna"
+    # values: trimmed sequence
+    [mr.emit(x) for x in set(values)]
 
 
 # Part 4

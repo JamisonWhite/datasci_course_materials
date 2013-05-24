@@ -1,31 +1,25 @@
 #problem 3.1
 __author__ = 'jamie'
 
-
-
 import sys
 import MapReduce
 
 # Part 1
 mr = MapReduce.MapReduce()
 
+
 # Part 2
 def mapper(record):
-    # key: document identifier
-    # value: document contents
-    key = record[0]
-    value = record[1]
-    mr.emit_intermediate(key, 1)
-    # mr.emit_intermediate(value, 1)
+    # 0: personA
+    # 1: personB; object of friendship
+    mr.emit_intermediate(record[0], 1)
+
 
 # Part 3
-def reducer(key, list_of_values):
-    # key: word
-    # value: list of columns
-    total = 0
-    for v in list_of_values:
-        total += v
-    mr.emit((key, total))
+def reducer(key, values):
+    #key: PersonA
+    #values: 1 for each friendship
+    mr.emit((key, sum(values)))
 
 
 # Part 4
