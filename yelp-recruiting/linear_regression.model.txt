@@ -1,0 +1,42 @@
+=== Run information ===
+
+Scheme:weka.classifiers.functions.LinearRegression -S 0 -R 1.0E-8
+Relation:     review_training-weka.filters.unsupervised.attribute.Remove-R1,4,7
+Instances:    229907
+Attributes:   7
+              business_review_count
+              business_stars
+              user_review_count
+              user_average_stars
+              review_stars
+              review_sentiment
+              review_useful
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+
+Linear Regression Model
+
+review_useful =
+
+      0.0004 * business_review_count +
+      0.0921 * business_stars +
+      0.0034 * user_review_count +
+     -0.0668 * user_average_stars +
+     -0.1192 * review_stars +
+      0.0333 * review_sentiment +
+      1.0156
+
+Time taken to build model: 0.23 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.3419
+Mean absolute error                      1.2546
+Root mean squared error                  2.0949
+Relative absolute error                 91.5575 %
+Root relative squared error             93.9721 %
+Total Number of Instances           229907     
+
